@@ -139,7 +139,7 @@ function drawEverything() {
     
     canvasContext.font = "30px Arial";
     canvasContext.fillText(player1Score, 100, 100);
-    canvasContext.fillText(player1Score, canvas.width-100, 100);
+    canvasContext.fillText(player2Score, canvas.width-100, 100);
 }
 
 function computerMovement(){
@@ -161,21 +161,32 @@ function moveEverything() {
     ballX += ballSpeedX;
     ballY += ballSpeedY;
     if (ballX > (canvas.width - PADDLE_THICKNESS) || ballX < PADDLE_THICKNESS) {
-        if( ballY > paddleY && ballY < (paddleY + PADDLE_HEIGHT )) {
-            ballSpeedX = -ballSpeedX;
-
-            //To change the return angle based on the ball's hitting position
-            if(ballX < PADDLE_THICKNESS){
-                var deltaY = ballY - (paddleY + PADDLE_HEIGHT / 2);
-                ballSpeedY = deltaY * 0.35;
+        if(ballX < canvas.width / 2){ //ball is in left side
+            if( ballY > paddleY && ballY < (paddleY + PADDLE_HEIGHT )) {
+                ballSpeedX = -ballSpeedX;
+                //To change the return angle based on the ball's hitting position
+                if(ballX < PADDLE_THICKNESS){
+                    var deltaY = ballY - (paddleY + PADDLE_HEIGHT / 2);
+                    ballSpeedY = deltaY * 0.35;
+                }
             }else{
-                var deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
-                ballSpeedY = deltaY * 0.35;
+                ballSpeedY = 4;
+                player2Score++;     
+                ballReset();
             }
-        }else{
-            ballSpeedY = 4;
-            (ballX < canvas.width / 2) ? player2Score++ : player1Score++;     
-            ballReset();
+        }else{//ball is in right side
+            if( ballY > paddle2Y && ballY < (paddle2Y + PADDLE_HEIGHT )) {
+                ballSpeedX = -ballSpeedX;
+                //To change the return angle based on the ball's hitting position
+                if(ballX > (canvas.width - PADDLE_THICKNESS)){
+                    var deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
+                    ballSpeedY = deltaY * 0.35;
+                }
+            }else{
+                ballSpeedY = 4;
+                player1Score++;     
+                ballReset();
+            }
         }
     }
     if (ballY > (canvas.height - BALL_SIZE) || ballY < BALL_SIZE) {
